@@ -58,7 +58,6 @@ const NumberStatistics: React.FC = () => {
     console.info(formData); // 确保表单数据被正确打印
 
     const { startPeriod, numPeriods, interval } = formData;
-    try {
       const { data, error } = await RequestMulti({
         start_period: startPeriod,
         num_periods: numPeriods,
@@ -66,23 +65,17 @@ const NumberStatistics: React.FC = () => {
         file: file as File,
       });
 
-      if (data) {
-        setResult(data);
-      } else if (error) {
-        setError(error);
+      if (error) {
+        setLoading(false);
+        setError(error)
+        console.info(error); // 确保错误信息被正确打印
+        message.error(error.detail || '请求失败');
+        return;
       }
+
+      setResult(data);
       const transformedData = transformData(data); // 转换数据
       setDataSource(transformedData); // 设置数据源
-      if (data) {
-        setResult(data);
-      } else if (error) {
-        setError(error);
-        console.info(error); // 确保错误信息被正确打印
-        message.error(error.message);
-      }
-    } catch (error) {
-      console.error('Request failed:', error);
-    }
 
     setLoading(false);
   };

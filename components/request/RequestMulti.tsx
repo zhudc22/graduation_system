@@ -22,9 +22,9 @@ export default async function RequestMulti({
   const formData = new FormData();
   formData.append('file', file); // 'file' 是服务器端期待的字段名
 
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/calculate/multi/?start_period=${start_period}&interval=${interval}&num_periods=${num_periods}`,
+  let response = null
+     response = await fetch(
+      `http://192.168.0.4:8000/calculate/multi/?start_period=${start_period}&interval=${interval}&num_periods=${num_periods}`,
       {
         method: 'POST',
         headers: {
@@ -41,7 +41,4 @@ export default async function RequestMulti({
 
     const result: ResultData = await response.json();
     return { data: result };
-  } catch (error) {
-    return { error: { message: 'Network error or server is unreachable' } };
-  }
 }
