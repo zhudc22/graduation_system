@@ -6,15 +6,15 @@ export interface ResultData {
   [key: string]: any;
 }
 
-export default async function RequestMulti({
+export default async function RequestMultipliers({
   start_period,
-  num_periods,
   interval,
+  num_multipliers,
   file,
 }: {
   start_period: any;
-  num_periods: any;
   interval: any;
+  num_multipliers: any;
   file: File;
 }): Promise<{ data?: ResultData; error?: ErrorData }> {
   const formData = new FormData();
@@ -22,7 +22,7 @@ export default async function RequestMulti({
 
   let response = null;
   response = await fetch(
-    `http://192.168.0.4:8000/calculate/multi/?start_period=${start_period}&interval=${interval}&num_periods=${num_periods}`,
+    `http://192.168.0.4:8000/calculate/multipliers/?start_period=${start_period}&interval=${interval}&num_multipliers=${num_multipliers}`,
     {
       method: 'POST',
       headers: {

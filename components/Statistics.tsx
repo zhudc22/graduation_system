@@ -44,8 +44,7 @@ const NumberStatistics: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<RcFile>();
-  const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState<any>(null);
+
   const handleFileUpload = (file: RcFile) => {
     setFile(file);
   };
@@ -58,24 +57,22 @@ const NumberStatistics: React.FC = () => {
     console.info(formData); // 确保表单数据被正确打印
 
     const { startPeriod, numPeriods, interval } = formData;
-      const { data, error } = await RequestMulti({
-        start_period: startPeriod,
-        num_periods: numPeriods,
-        interval: interval,
-        file: file as File,
-      });
+    const { data, error } = await RequestMulti({
+      start_period: startPeriod,
+      num_periods: numPeriods,
+      interval: interval,
+      file: file as File,
+    });
 
-      if (error) {
-        setLoading(false);
-        setError(error)
-        console.info(error); // 确保错误信息被正确打印
-        message.error(error.detail || '请求失败');
-        return;
-      }
+    if (error) {
+      setLoading(false);
+      console.info(error); // 确保错误信息被正确打印
+      message.error(error.detail || '请求失败');
+      return;
+    }
 
-      setResult(data);
-      const transformedData = transformData(data); // 转换数据
-      setDataSource(transformedData); // 设置数据源
+    const transformedData = transformData(data); // 转换数据
+    setDataSource(transformedData); // 设置数据源
 
     setLoading(false);
   };
