@@ -1,105 +1,199 @@
-// pages/rate-chart.js
-
 import React, { useState } from 'react';
-import { Form, InputNumber, Button, Upload } from 'antd';
+import { Button, Form, InputNumber, Table, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { RcFile, UploadProps } from 'antd/lib/upload/interface';
+import RequestMulti from './request/RequestMulti';
 
-const RateChart = () => {
-  const [chartData, setChartData] = useState(null);
+function transformData(data: any) {
+  const transformedData: any = [];
 
-  // 实际 API 调用的函数
-  const fetchData = async (startPeriod: any, interval: any, periods: any) => {
+  // 遍历"期号"对象，使用期号作为每条记录的基础
+  Object.keys(data['期号']).forEach((key) => {
+    interface Row {
+      key: string;
+      [key: string]: any; // 使用any类型允许任意值
+    }
+
+    // 创建一个新对象，用于存储转换后的单行数据
+    const row: Row = { key };
+
+    // 设置期号
+    row['period'] = data['期号'][key];
+
+    // 遍历每个次数，如"0次"、"1次"等，将对应的值添加到行对象中
+    Object.keys(data).forEach((times) => {
+      // 跳过"期号"键，因为它已经被处理了
+      if (times === '期号') return;
+
+      // 使用次数作为键，从对应的对象中获取值
+      const value = data[times][key];
+      // 将键名转换成列表列定义中的dataIndex形式
+      const dataIndex = times.replace('次', 'times');
+      // 设置行对象中对应的值
+      row[dataIndex] = value;
+    });
+
+    // 将转换后的行对象添加到结果数组中
+    transformedData.push(row);
+  });
+
+  return transformedData;
+}
+
+const NumberStatistics: React.FC = () => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [file, setFile] = useState<RcFile>();
+
+  const handleFileUpload = (file: RcFile) => {
+    setFile(file);
+  };
+
+  const [dataSource, setDataSource] = useState([]);
+
+  const handleSubmit = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(
-        `你的API端点?startPeriod=${startPeriod}&interval=${interval}&periods=${periods}`
-      );
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const formData = await form.validateFields();
+      console.info(formData); // 确保表单数据被正确打印
+
+      const { startPeriod, numPeriods, interval } = formData;
+      const data = await RequestMulti({
+        start_period: startPeriod,
+        num_periods: numPeriods,
+        interval: interval,
+        file: file as File,
+      });
+      const transformedData = transformData(data); // 转换数据
+      setDataSource(transformedData); // 设置数据源
+
+      console.log(data);
+    } catch (error: unknown) {
+      console.error('错误提交:', error);
+      // 类型守卫，检查error是否为Error实例
+      if (error instanceof Error) {
+        // 现在可以安全地访问error.message
+        message.error(error.message || '提交时发生未知错误，请稍后重试。');
+      } else {
+        // 如果error不是Error实例，我们可能不知道如何处理，所以显示一个通用错误信息
+        message.error('提交时发生未知错误，请稍后重试。');
       }
-      const data = await response.json();
-      setChartData(data); // 假设后端返回的是可直接用于展示的数据
-    } catch (error) {
-      console.error('Fetch error: ', error);
     }
+    setLoading(false);
   };
 
-  const onFinish = (values: any) => {
-    const { startPeriod, interval, periods } = values;
-    fetchData(startPeriod, interval, periods);
-  };
-
-  // 文件上传配置
-  const handleFileChange = async (info: any) => {
-    if (info.file.status === 'uploading') {
-      console.log('Uploading...', info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      console.log(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      console.log(`${info.file.name} file upload failed.`);
-    }
-  };
-
-  const props = {
-    name: 'file',
-    action: '/api/upload', // 假设文件上传的后端API路径为 /api/upload
-    headers: {
-      authorization: 'authorization-text',
+  const columns = [
+    {
+      title: '期号',
+      dataIndex: 'period',
+      key: 'period',
     },
-    onChange: handleFileChange,
-    customRequest: async ({ action, file, onSuccess, onError }: any) => {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      try {
-        const response = await fetch(action, {
-          method: 'POST',
-          body: formData, // 不设置 'Content-Type': 'multipart/form-data'，浏览器会自动设置
-        });
-        if (response.ok) {
-          const result = await response.json();
-          onSuccess(result, file);
-        } else {
-          throw new Error('Upload failed.');
-        }
-      } catch (error) {
-        console.error('Upload error:', error);
-        onError(error);
-      }
+    {
+      title: '0次',
+      dataIndex: '0times',
+      key: '0times',
     },
+    {
+      title: '1次',
+      dataIndex: '1times',
+      key: '1times',
+    },
+    {
+      title: '2次',
+      dataIndex: '2times',
+      key: '2times',
+    },
+    {
+      title: '3次',
+      dataIndex: '3times',
+      key: '3times',
+    },
+    {
+      title: '4次',
+      dataIndex: '4times',
+      key: '4times',
+    },
+    {
+      title: '5次',
+      dataIndex: '5times',
+      key: '5times',
+    },
+    {
+      title: '6次',
+      dataIndex: '6times',
+      key: '6times',
+    },
+    {
+      title: '7次',
+      dataIndex: '7times',
+      key: '7times',
+    },
+    {
+      title: '8次',
+      dataIndex: '8times',
+      key: '8times',
+    },
+    {
+      title: '9次',
+      dataIndex: '9times',
+      key: '9times',
+    },
+    {
+      title: '10次',
+      dataIndex: '10times',
+      key: '10times',
+    },
+  ];
+
+  const uploadProps: UploadProps = {
+    beforeUpload: (file) => {
+      handleFileUpload(file);
+      return false;
+    },
+    multiple: false,
+    showUploadList: false,
   };
 
   return (
     <div className='flex flex-col gap-10 mx-4'>
-      <Form layout='inline' onFinish={onFinish}>
-        <Form.Item name='startPeriod' label='开始期号'>
+      <Form form={form} layout='inline' onFinish={handleSubmit}>
+        <Form.Item
+          name='startPeriod'
+          label='开始期号'
+          rules={[{ required: true, message: '请输入开始期号' }]}
+        >
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name='interval' label='后退间隔'>
+        <Form.Item
+          name='numPeriods'
+          label='后退期数'
+          rules={[{ required: true, message: '请输入后退期数' }]}
+        >
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name='periods' label='后退期数'>
+        <Form.Item
+          name='interval'
+          label='后退间隔'
+          rules={[{ required: true, message: '请输入后退间隔' }]}
+        >
           <InputNumber min={1} />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>
-            获取数据
+          <Upload {...uploadProps}>
+            <Button icon={<UploadOutlined />} loading={loading}>
+              上传文件
+            </Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item>
+          <Button type='primary' htmlType='submit' loading={loading}>
+            统计
           </Button>
         </Form.Item>
       </Form>
-      {chartData && (
-        <div>
-          {/* 这里可以展示后端返回的折线图数据，例如直接渲染图表的图片或其他格式 */}
-          <p>数据已获取，根据后端返回的数据格式进行展示。</p>
-        </div>
-      )}
-      <Upload {...props}>
-        <Button icon={<UploadOutlined />} type='primary'>
-          点击上传文件
-        </Button>
-      </Upload>
+      <Table columns={columns} dataSource={dataSource} pagination={false} />
     </div>
   );
 };
 
-export default RateChart;
+export default NumberStatistics;
