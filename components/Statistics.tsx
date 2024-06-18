@@ -53,10 +53,19 @@ const NumberStatistics: React.FC = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
+
+    // 在提交前检查文件是否已选择
+    if (!file) {
+      message.error('请上传文件');
+      setLoading(false);
+      return; // 提早返回，不继续执行后面的代码
+    }
+
     const formData = await form.validateFields();
     console.info(formData); // 确保表单数据被正确打印
 
     const { startPeriod, numPeriods, interval } = formData;
+
     const { data, error } = await RequestMulti({
       start_period: startPeriod,
       num_periods: numPeriods,

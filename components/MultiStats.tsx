@@ -53,6 +53,11 @@ const NumberStatistics: React.FC = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    if (!file) {
+      message.error('请上传文件');
+      setLoading(false);
+      return; // 提早返回，不继续执行后面的代码
+    }
     const formData = await form.validateFields();
     console.info(formData); // 确保表单数据被正确打印
 

@@ -22,7 +22,7 @@ export default async function RequestMultipliers({
 
   let response = null;
   response = await fetch(
-    `http://192.168.0.4:8000/calculate/multipliers/?start_period=${start_period}&interval=${interval}&num_multipliers=${num_multipliers}`,
+    `http://127.0.0.1:8000/calculate/multipliers/?start_period=${start_period}&interval=${interval}&num_multipliers=${num_multipliers}`,
     {
       method: 'POST',
       headers: {

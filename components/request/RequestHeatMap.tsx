@@ -22,7 +22,7 @@ export default async function RequestHeatMap({
 
   let response = null;
   response = await fetch(
-    `http://192.168.0.4:8000/calculate/heatmap/?start_period=${start_period}&interval=${interval}&num_periods=${num_periods}`,
+    `http://127.0.0.1:8000/calculate/heatmap/?start_period=${start_period}&interval=${interval}&num_periods=${num_periods}`,
     {
       method: 'POST',
       headers: {
