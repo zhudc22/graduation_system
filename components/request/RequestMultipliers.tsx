@@ -18,15 +18,15 @@ export default async function RequestMultipliers({
   file: File;
 }): Promise<{ data?: ResultData; error?: ErrorData }> {
   const formData = new FormData();
-  formData.append('file', file); // 'file' 是服务器端期待的字段名
+  formData.append("file", file); // 'file' 是服务器端期待的字段名
 
   let response = null;
   response = await fetch(
-    `http://127.0.0.1:8000/calculate/multipliers/?start_period=${start_period}&interval=${interval}&num_multipliers=${num_multipliers}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/calculate/multipliers/?start_period=${start_period}&interval=${interval}&num_multipliers=${num_multipliers}`,
     {
-      method: 'POST',
+      method: "POST",
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
       },
       body: formData,
     }
