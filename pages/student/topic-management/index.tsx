@@ -11,20 +11,23 @@ interface Topic {
 
 const TopicPage: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false)
-    const [list, setList] = useState<any[]>([])
     const [query, setQuery] = useState<any>({
         pageNum: 1,
         pageSize: 10
     })
     const [myForm] = Form.useForm()
-    const [datasource, setDatasource] = useState<Topic[]>([]);
+    const [datasource, setDatasource] = useState<any[]>([]);
     const gotoUpdatePage = (id: string) => {
     }
     const [total, setTotal] = useState<number>(0)
     const columns: ColumnsType<Topic> = [
-        {title: "编号", dataIndex: "id", key: "id", align: "center"},
-        {title: "课题名称", dataIndex: "name", key: "name", align: "center"},
-        {title: "课题类型", dataIndex: "type", key: "type", align: "center"},
+        {title: "课题序号", dataIndex: "projectId", key: "projectId", align: "center"},
+        {title: "课题名称", dataIndex: "projectName", key: "projectName", align: "center"},
+        {title: "教师", dataIndex: "teacherName", key: "teacherName", align: "center"},
+        {title: "学生", dataIndex: "stuName", key: "stuName", align: "center"},
+        {title: "是否允许答辩", dataIndex: "isAllowToReply", key: "isAllowToReply", align: "center"},
+        {title: "是否通过答辩", dataIndex: "isPassed", key: "isPassed", align: "center"},
+
         {
             title: "操作",
             dataIndex: "action",
@@ -47,12 +50,12 @@ const TopicPage: React.FC = () => {
         //此处需要调接口
 
         setOpen(false)
+        setQuery({})
     }
 
     useEffect(() => {
         //此处需要调接口
-        setDatasource(list)
-        setTotal(list.length)
+
     }, [query])
 
     return (
@@ -74,7 +77,7 @@ const TopicPage: React.FC = () => {
             <Table
                 dataSource={datasource}
                 columns={columns}
-                rowKey="_id"
+                rowKey="projectId"
                 pagination={{
                     total,
                     onChange(pageNum) {

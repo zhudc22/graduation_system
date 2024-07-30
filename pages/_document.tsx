@@ -1,13 +1,51 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import Document, {Head, Html, Main, NextScript} from 'next/document'
+import {createCache, extractStyle, StyleProvider} from '@ant-design/cssinjs'
 
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head />
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+type MyDocumentProps = {
+    styles: React.ReactNode
 }
+
+export class MyDocument extends Document<MyDocumentProps> {
+    render() {
+        return (
+            <Html lang="en">
+                <Head>{this.props.styles}</Head>
+                <body>
+                <Main/>
+                <NextScript/>
+                </body>
+            </Html>
+        )
+    }
+}
+
+MyDocument.getInitialProps = async (ctx) => {
+    const originalRenderPage = ctx.renderPage
+    const cache = createCache()
+
+    ctx.renderPage = () =>
+        originalRenderPage({
+            enhanceApp: (App) =>
+                function EnhanceApp(props) {
+                    return (
+                        <StyleProvider cache={cache}>
+                            <App {...props} />
+                        </StyleProvider>
+                    )
+                },
+        })
+
+    const initialProps = await Document.getInitialProps(ctx)
+
+    return {
+        ...initialProps,
+        styles: (
+            <>
+                {initialProps.styles}
+                <style dangerouslySetInnerHTML={{__html: extractStyle(cache)}}/>
+            </>
+        ),
+    }
+}
+
+export default MyDocument

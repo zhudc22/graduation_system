@@ -9,10 +9,10 @@ export default function Home() {
     );
 }
 
-export async function getServerSideProps(context:any) {
+export async function getServerSideProps(context: any) {
     return {
         redirect: {
-            destination: '/home/topic-management', // 目标路由
+            destination: '/login', // 目标路由
             permanent: true,        // 指明这不是一个永久重定向
         }
     };

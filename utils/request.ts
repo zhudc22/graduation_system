@@ -1,4 +1,3 @@
-// request.ts
 const BASE_URL = 'http://118.25.18.149:8080'; // 修改为你的 API 基础地址
 
 interface RequestOptions {
@@ -8,7 +7,7 @@ interface RequestOptions {
     contentType?: 'json' | 'form-data';
 }
 
-function request(endpoint: string, { method, body, contentType = 'json' }: RequestOptions) {
+function request(endpoint: string, {method, body, contentType = 'json'}: RequestOptions) {
     const headers: HeadersInit = {};
     if (contentType === 'json') {
         headers['Content-Type'] = 'application/json';
@@ -40,9 +39,20 @@ function request(endpoint: string, { method, body, contentType = 'json' }: Reque
         });
 }
 
-export const get = (endpoint: string) => request(endpoint, { method: 'GET' });
+function buildQueryString(params: Record<string, any>): string {
+    const queryString = new URLSearchParams(params).toString();
+    return queryString ? `?${queryString}` : '';
+}
+
+export const get = (endpoint: string, query?: Record<string, any>) => {
+    const queryString = query ? buildQueryString(query) : '';
+    return request(`${endpoint}${queryString}`, {method: 'GET'});
+};
+
 export const post = (endpoint: string, body: any, contentType: 'json' | 'form-data' = 'json') =>
-    request(endpoint, { method: 'POST', body, contentType });
+    request(endpoint, {method: 'POST', body, contentType});
+
 export const put = (endpoint: string, body: any, contentType: 'json' | 'form-data' = 'json') =>
-    request(endpoint, { method: 'PUT', body, contentType });
-export const del = (endpoint: string) => request(endpoint, { method: 'DELETE' });
+    request(endpoint, {method: 'PUT', body, contentType});
+
+export const del = (endpoint: string) => request(endpoint, {method: 'DELETE'});
