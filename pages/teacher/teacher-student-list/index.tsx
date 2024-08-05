@@ -5,7 +5,7 @@ import React from 'react';
 const Index: React.FC = () => {
 
     return (
-        <h1>教师学生列表</h1>
+        <h1>教师</h1>
     );
 
 }

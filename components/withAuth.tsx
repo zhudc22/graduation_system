@@ -1,4 +1,4 @@
-// components/withAuth.tsx
+// 暂时用不到
 import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 import jwt from 'jsonwebtoken';
