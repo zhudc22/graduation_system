@@ -112,7 +112,7 @@ const AppLayout: React.FC<LayoutProps> = ({children}) => {
 
     return (
         <Layout className="min-h-screen">
-            <Header className="fixed flex items-center justify-between w-full">
+            <Header className="fixed flex items-center justify-between w-full z-10">
                 <div className="flex-1">
                     <Menu
                         theme="dark"

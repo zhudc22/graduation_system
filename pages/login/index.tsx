@@ -1,7 +1,7 @@
 import React from 'react';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Form, Input, message} from 'antd';
-import {post} from '@/utils/request';
+import {post, setToken} from '@/utils/request';
 import {useRouter} from 'next/router';
 import Cookies from 'js-cookie';
 import jwt from 'jsonwebtoken';
@@ -14,11 +14,11 @@ const LoginPage: React.FC = () => {
         Object.keys(values).forEach(key => {
             formData.append(key, values[key]);
         });
-        post('/user/login', formData, 'form-data')
+        post('user/login', formData, true)
             .then((res) => {
                 if (res.code === '0') {
-                    localStorage.setItem('token', res.data.token)  // 将 Token 存储到 localStorage
-                    Cookies.set('token', res.data.token, {expires: 7}); // 设置 Cookie，有效期7天
+                    setToken(res.data.token)
+                    Cookies.set('token', res.data.token, {expires: 3650});
                     message.success(res.msg)
                     // 解码 Token 获取用户角色
                     const decodedToken = jwt.decode(res.data.token) as { groupCodes: string[] } | null;
