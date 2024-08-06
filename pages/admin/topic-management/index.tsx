@@ -6,8 +6,11 @@ import {get} from '@/utils/request';
 
 interface Topic {
     id: string;
-    name: string;
-    type: string;
+    projectName: string;
+    teacherName: string;
+    stuName: string;
+    isAllowToReply: boolean;
+    isPassed: boolean;
 }
 
 const TopicPage: React.FC = () => {
@@ -65,6 +68,12 @@ const TopicPage: React.FC = () => {
         console.log(searchTerm)
     };
 
+    const handleModalClose = () => {
+        setOpen(false);
+        myForm.resetFields();
+    };
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -115,15 +124,43 @@ const TopicPage: React.FC = () => {
                     },
                 }}
             />
-            <Modal title="添加课题" open={open} onCancel={() => setOpen(false)} onOk={() => {
+            <Modal title="添加课题" open={open} onCancel={handleModalClose} onOk={() => {
                 myForm.submit();
             }}>
                 <Form layout={'vertical'} form={myForm} onFinish={handleFinish}>
-                    <Form.Item label="课题名称" name={"name"} rules={[{required: true, message: "请输入课题名称"}]}>
+                    <Form.Item label="课题名称" name={"projectName"}
+                               rules={[
+                                   {required: true, message: "请输入课题名称"},
+                                   {type: 'string', message: "课题名称必须是字符串"}
+                               ]}>
                         <Input placeholder="请输入课题名称"/>
                     </Form.Item>
-                    <Form.Item label="课题简介" name={"dsc"} rules={[{required: true, message: "请输入课题简介"}]}>
+                    <Form.Item label="课题简介" name={"description"}
+                               rules={[
+                                   {required: true, message: "请输入课题简介"},
+                                   {type: 'string', message: "课题简介必须是字符串"},
+                               ]}>
                         <Input.TextArea placeholder="请输入课题简介"/>
+                    </Form.Item>
+                    <Form.Item label="学院id" name={"projectDepartmentId"}
+                               rules={[
+                                   {required: true, message: "请输入学院id"},
+                                   {type: 'number', message: "学院id必须是数字"},
+                               ]}>
+                        <Input placeholder="请输入学院id"/>
+                    </Form.Item>
+                    <Form.Item label="教师号" name={"teacherId"}
+                               rules={[
+                                   {required: true, message: "请输入教师号"},
+                                   {type: 'number', message: "教师号必须是数字"},
+                               ]}>
+                        <Input placeholder="请输入教师号"/>
+                    </Form.Item>
+                    <Form.Item label="学生学号" name={"stuId"}
+                               rules={[
+                                   {type: 'number', message: "学生学号必须是数字"},
+                               ]}>
+                        <Input placeholder="请输入学生学号"/>
                     </Form.Item>
                 </Form>
             </Modal>

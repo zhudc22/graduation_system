@@ -1,10 +1,9 @@
-// middleware.ts
 import {NextRequest, NextResponse} from 'next/server';
 import jwt from 'jsonwebtoken';
 
 export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
-    
+
     // 直接允许访问登录页面
     if (path === '/login') {
         return NextResponse.next();

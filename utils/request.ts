@@ -76,6 +76,20 @@ const get = async (path, data = {}) => {
     return content
 }
 
+const postWithQueryParams = async (path, data = {}) => {
+    const params = data;
+    const query = Object.keys(params)
+        .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+        .join('&');
+    const res = await fetch(`${API_REMOTE}/${path}?${query}`, {
+        method: 'POST',
+        headers: headers(),
+    });
+    const content = await parseResponse(res);
+    return content;
+}
+
+
 export const downloadFile = async (path, params = {}) => {
     try {
         // 构建查询参数
@@ -162,4 +176,4 @@ const post = requestMethod('POST')
 const put = requestMethod('PUT')
 const httpDelete = requestMethod('DELETE')
 
-export {setToken, getUserType, getToken, clearToken, get, post, put, httpDelete}
+export {setToken, getUserType, getToken, clearToken, get, post, put, httpDelete, postWithQueryParams}
