@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Form, Input, message, Modal, Table} from "antd";
+import {Button, Card, Form, Input, InputNumber, message, Modal, Table} from "antd";
 import {DeleteOutlined, EditOutlined, SearchOutlined} from "@ant-design/icons";
 import {ColumnsType} from 'antd/lib/table';
 import {get} from '@/utils/request';
@@ -131,36 +131,29 @@ const TopicPage: React.FC = () => {
                     <Form.Item label="课题名称" name={"projectName"}
                                rules={[
                                    {required: true, message: "请输入课题名称"},
-                                   {type: 'string', message: "课题名称必须是字符串"}
                                ]}>
                         <Input placeholder="请输入课题名称"/>
                     </Form.Item>
                     <Form.Item label="课题简介" name={"description"}
                                rules={[
                                    {required: true, message: "请输入课题简介"},
-                                   {type: 'string', message: "课题简介必须是字符串"},
                                ]}>
                         <Input.TextArea placeholder="请输入课题简介"/>
                     </Form.Item>
                     <Form.Item label="学院id" name={"projectDepartmentId"}
                                rules={[
                                    {required: true, message: "请输入学院id"},
-                                   {type: 'number', message: "学院id必须是数字"},
                                ]}>
-                        <Input placeholder="请输入学院id"/>
+                        <InputNumber className='w-full' placeholder="请输入学院id"/>
                     </Form.Item>
                     <Form.Item label="教师号" name={"teacherId"}
                                rules={[
                                    {required: true, message: "请输入教师号"},
-                                   {type: 'number', message: "教师号必须是数字"},
                                ]}>
-                        <Input placeholder="请输入教师号"/>
+                        <InputNumber className='w-full' placeholder="请输入教师号"/>
                     </Form.Item>
-                    <Form.Item label="学生学号" name={"stuId"}
-                               rules={[
-                                   {type: 'number', message: "学生学号必须是数字"},
-                               ]}>
-                        <Input placeholder="请输入学生学号"/>
+                    <Form.Item label="学生学号" name={"stuId"}>
+                        <InputNumber className='w-full' placeholder="请输入学生学号"/>
                     </Form.Item>
                 </Form>
             </Modal>
