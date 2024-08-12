@@ -5,7 +5,7 @@ import Router from 'next/router'
 const API_REMOTE = 'http://118.25.18.149:8080'; // 修改为你的 API 基础地址
 
 const setToken = (s) => {
-    return localStorage.setItem(`token`, s)
+    return localStorage.setItem(`Token`, s)
 }
 
 
@@ -14,11 +14,11 @@ const getUserType = () => {
 }
 
 const getToken = () => {
-    return localStorage.getItem('token')
+    return localStorage.getItem('Token')
 }
 
 const clearToken = () => {
-    return localStorage.removeItem('token')
+    return localStorage.removeItem('Token')
 
 }
 
